@@ -1,3 +1,12 @@
+# Python Package Exercise
+# Team members
+
+- [Fuzhen Li](https://github.com/fzfzlfz)
+- [Jiasheng wang](https://github.com/isomorphismss)
+- [Xuefeng Song](https://github.com/wowwowooo)
+- [Yuantian Tan](https://github.com/AsukaTan)
+
+
 # How to Use and Contribute to the `todopkg` Package
 
 ## For Developers: Using `todopkg`
@@ -16,6 +25,14 @@ The `todopkg` provides a simple interface for managing a to-do list. Here's a qu
 
 - **Create a to-do list instance:**
 
+  By default, the list created while the program is running will be saved to a file named 'todolist.json' in the current directory. If you wish to designate a different file for storage, you can specify your preferred filename; however, ensure that it is in JSON format.
+
+  ```python
+  from todo import TodoListManager
+  todo_manager = TodoListManager(filename=custom.json)
+  ```
+
+  Otherwise, to just use the default option:
   ```python
   from todo import TodoListManager
   todo_manager = TodoListManager()
@@ -29,10 +46,23 @@ The `todopkg` provides a simple interface for managing a to-do list. Here's a qu
 
 - **Add items to the to-do list:**
 
-  ```python
-  todo_manager.add_item_to_todo_list('Groceries', 'Apples')
-  ```
-
+  Items may be assigned a priority level or a due date, and will be displayed in sorted order accordingly. When both are specified, priority ranking takes precedence over the due date.
+  - Without priority or due date:
+    ```python
+    todo_manager.add_item_to_todo_list('Groceries', 'Apples')
+    ```
+  - With priority only (the lower the number, the higher the priority): 
+    ```python
+    todo_manager.add_item_to_todo_list('Homeworks', 'Midterm Review', priority=1)
+    ```
+  - With due date only (due date in format "YYYY-MM-DD"):
+    ```python
+    todo_manager.add_item_to_todo_list('Homeworks', 'Essay', due_date="2023-11-10")
+    ```
+  - With both priority and due date:
+    ```python
+    todo_manager.add_item_to_todo_list('Homeworks', 'Essay', priority=2, due_date="2023-11-10")
+    ```
 - **Remove items from the to-do list:**
 
   ```python
