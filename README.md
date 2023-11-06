@@ -1,4 +1,6 @@
 # Python Package Exercise
+[![Build Status](https://github.com/software-students-fall2023/3-python-package-exercise-isomorphism1337/actions/workflows/main.yml/badge.svg)](https://github.com/software-students-fall2023/3-python-package-exercise-isomorphism1337/actions/workflows/main.yml)
+
 # Team members
 
 - [Fuzhen Li](https://github.com/fzfzlfz)
