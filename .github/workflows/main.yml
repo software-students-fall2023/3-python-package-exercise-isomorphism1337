@@ -20,5 +20,10 @@ jobs:
         run: |
           python -m pip install --upgrade pip pipenv
           pipenv install --dev
+      - name: Debugging information
+        run: |
+          pipenv --version
+          python --version
+          pipenv install --dev
           pipenv graph
-          pipenv run pytest
+          pipenv run which pytest
