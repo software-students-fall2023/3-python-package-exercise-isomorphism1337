@@ -18,7 +18,7 @@ class TodoListManager:
     # Constructor, optional filename parameter with default value 'todolist.json'
     def __init__(self, filename='todolist.json', enable_auto_save = True):
         self.todo_lists = {}
-        self.filename = os.path.abspath(filename)
+        self.filename = filename
         if os.path.exists(self.filename): 
             self.load_from_file()
         if enable_auto_save:
@@ -29,12 +29,14 @@ class TodoListManager:
         if name in self.todo_lists:
             raise ValueError(f"TodoList named {name} already exists.")
         self.todo_lists[name] = []
+        self.save_to_file()
 
     # Delete a certain todo list
     def delete_todo_list(self, name):
         if name not in self.todo_lists:
             raise ValueError(f"No TodoList named {name} found.")
         del self.todo_lists[name]
+        self.save_to_file()
 
     # Show all todo lists
     def show_all_todo_list(self):
@@ -47,6 +49,7 @@ class TodoListManager:
         if new_name in self.todo_lists:
             raise ValueError(f"TodoList named {new_name} already exists.")
         self.todo_lists[new_name] = self.todo_lists.pop(old_name)
+        self.save_to_file()
 
     # Maintain two optional fields used for sorting, priority field has higher priority than due_date field
     def add_item_to_todo_list(self, name, item, priority=None, due_date=None):
@@ -65,6 +68,7 @@ class TodoListManager:
         self.todo_lists[name].sort(
             key=lambda x: (x['priority'], x['due_date'] if x['due_date'] is not None else datetime.max.date())
         )
+        self.save_to_file()
 
     # Return list in a user-friendly format
     def show_all_items_in_todo_list(self, name):
@@ -96,6 +100,7 @@ class TodoListManager:
         self.todo_lists[name].sort(
             key=lambda x: (x['priority'], x['due_date'] if x['due_date'] is not None else datetime.max.date())
         )
+        self.save_to_file()
     
     # Save to json file using the custom encoder
     def save_to_file(self):
@@ -104,6 +109,8 @@ class TodoListManager:
 
     # Restore the list from the json file
     def load_from_file(self):
+        if not os.path.isfile(self.filename):
+            raise FileNotFoundError(f"The file {self.filename} does not exist.")
         try:
             with open(self.filename, 'r') as f:
                 data = json.load(f)

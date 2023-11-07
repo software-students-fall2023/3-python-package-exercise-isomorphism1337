@@ -1,3 +1,5 @@
+# Simple example file for demo purposes, will be completed later
+
 from todo import TodoListManager
 import os
 
@@ -13,8 +15,6 @@ manager.add_item_to_todo_list('Groceries', 'Apple', priority=1, due_date="2023-1
 del manager  
 
 new_manager = TodoListManager(file_path)
-
-assert 'Groceries' not in new_manager.show_all_todo_list(), "New manager should not have any todo lists before loading"
 
 try:
     new_manager.load_from_file()

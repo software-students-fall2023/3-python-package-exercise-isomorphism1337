@@ -230,7 +230,10 @@ def test_save_to_file_overwrite(manager):
 #--------------------------------------------------------------------------------------------
 # Three test functions for load_from_file function
 def test_load_from_empty_file(manager):
-    manager.load_from_file()
+    if os.path.exists(manager.filename):
+        os.remove(manager.filename)
+    with pytest.raises(FileNotFoundError, match=r"The file .* does not exist."):
+        manager.load_from_file()
     assert manager.show_all_todo_list() == {}
 
 def test_load_from_valid_data(manager, tmpdir):
@@ -255,21 +258,16 @@ def test_load_from_invalid_data(manager, tmpdir):
         manager.load_from_file()
 #--------------------------------------------------------------------------------------------
 
-# def test_save_and_load_functionalities(tmpdir):
-#     # Use the tmpdir to create a file path that will be used only in this test
-#     file_path = tmpdir.join("todo.json")
+def test_save_and_load_functionalities(tmpdir):
+    file_path = tmpdir.join("todo.json")
     
-#     # Your setup code here
-#     manager = TodoListManager(str(file_path), enable_auto_save = False)
-#     manager.create_todo_list('Groceries')
-#     manager.add_item_to_todo_list('Groceries', 'Apple', due_date="2023-11-10")
-#     manager.save_to_file()
-#     # Emulate ending the session and restarting it
-#     del manager  # Ensure manager is not in scope anymore
-#     # Create a new instance to simulate a new program start
-#     new_manager = TodoListManager(str(file_path))
-#     assert 'Groceries' in new_manager.show_all_todo_list()
-#     # new_manager.load_from_file()  # Load the data
-#     # Your assertions here
-#     assert 'Groceries' in new_manager.show_all_todo_list()
-#     assert 'Apple' in [item['item'] for item in new_manager.todo_lists['Groceries']]
+    manager = TodoListManager(str(file_path))
+    manager.create_todo_list('Groceries')
+    manager.add_item_to_todo_list('Groceries', 'Apple', due_date="2023-11-10")
+
+    del manager  # Ensure manager is not in scope anymore
+
+    new_manager = TodoListManager(str(file_path))
+    assert 'Groceries' in new_manager.show_all_todo_list()
+    assert 'Apple' in [item['item'] for item in new_manager.todo_lists['Groceries']]
+    assert new_manager.show_all_todo_list()['Groceries'][0]['priority'] == float('inf')
