@@ -5,9 +5,11 @@ name = "pypi"
 
 [packages]
 pytest = "*"
+tabulate = "*"
+flake8 = "*"
+exceptiongroup = "*"
 
 [dev-packages]
 pytest = "*"
 
 [requires]
-python_version = "3.9"
