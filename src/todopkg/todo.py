@@ -2,7 +2,7 @@ import atexit
 import json
 import os
 from datetime import date, datetime
-# from tabulate import tabulate
+from tabulate import tabulate
 
 # Class to encode the due date and priority when saving the lists to the json file
 class CustomEncoder(json.JSONEncoder):
@@ -109,21 +109,21 @@ class TodoListManager:
         return formatted_items
     
     # Print all todo lists in a table format
-    # def print_all_todo_lists(self):
-    #     for list_name, items in self.show_all_todo_list().items():
-    #         title = f"Todo List: {list_name}"
-    #         separator = "-" * (11 + len(title))
-    #         print(separator)
-    #         print(title)
-    #         print(separator)
-    #         table = []
-    #         headers = ["Item", "Priority", "Due Date"]
-    #         for item in items:
-    #             priority = 'N/A' if item['priority'] == float('inf') else item['priority']
-    #             due_date = item['due_date'].strftime('%Y-%m-%d') if item['due_date'] else 'No due date'
-    #             table.append([item['item'], priority, due_date])
-    #         print(tabulate(table, headers, tablefmt="grid"))
-    #         print()
+    def print_all_todo_lists(self):
+        for list_name, items in self.show_all_todo_list().items():
+            title = f"Todo List: {list_name}"
+            separator = "-" * (11 + len(title))
+            print(separator)
+            print(title)
+            print(separator)
+            table = []
+            headers = ["Item", "Priority", "Due Date"]
+            for item in items:
+                priority = 'N/A' if item['priority'] == float('inf') else item['priority']
+                due_date = item['due_date'].strftime('%Y-%m-%d') if item['due_date'] else 'No due date'
+                table.append([item['item'], priority, due_date])
+            print(tabulate(table, headers, tablefmt="grid"))
+            print()
 
     # Remove an item from the specified todo list
     def remove_item_from_todo_list(self, name, index):

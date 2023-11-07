@@ -17,7 +17,7 @@ def main():
 
     # Demonstrate showing all todo lists
     print("\nAll Todo Lists:")
-    # manager.print_all_todo_lists()
+    manager.print_all_todo_lists()
 
     # Demonstrate showing items in a specific todo list
     print("\nItems in 'Groceries' list:")
