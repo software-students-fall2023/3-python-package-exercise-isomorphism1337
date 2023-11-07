@@ -16,12 +16,13 @@ class CustomEncoder(json.JSONEncoder):
 class TodoListManager:  
     
     # Constructor, optional filename parameter with default value 'todolist.json'
-    def __init__(self, filename='todolist.json'):
+    def __init__(self, filename='todolist.json', enable_auto_save = True):
         self.todo_lists = {}
-        self.filename = filename
+        self.filename = os.path.abspath(filename)
         if os.path.exists(self.filename): 
             self.load_from_file()
-        atexit.register(self.save_to_file)  # Automatically save the created lists to the file named filename
+        if enable_auto_save:
+            atexit.register(self.save_to_file)  # Automatically save the created lists to the file named filename
 
     # Create a new todo list
     def create_todo_list(self, name):
@@ -99,22 +100,31 @@ class TodoListManager:
     # Save to json file using the custom encoder
     def save_to_file(self):
         with open(self.filename, 'w') as f:
-            json.dump(self.todo_lists, f, cls=CustomEncoder)
+            json.dump(self.todo_lists, f, cls = CustomEncoder)
 
     # Restore the list from the json file
     def load_from_file(self):
-        with open(self.filename, 'r') as f:
-            data = json.load(f)
-        # Custom decoding for the loaded data
+        try:
+            with open(self.filename, 'r') as f:
+                data = json.load(f)
+        except json.JSONDecodeError:
+            raise ValueError("The file could not be decoded as JSON.")
+        # Ensure that the data is a dictionary
+        if not isinstance(data, dict):
+            raise ValueError("The file does not contain a valid todo list format.")
         for todo_list_name, tasks in data.items():
+            # Validate that tasks is a list of dictionaries
+            if not isinstance(tasks, list) or not all(isinstance(task, dict) for task in tasks):
+                raise ValueError(f"Tasks for {todo_list_name} are not in a valid format.")
+            # if todo_list_name not in self.todo_lists:
+            self.create_todo_list(todo_list_name)
             for task in tasks:
-                if 'due_date' in task and task['due_date'] is not None:
-                    task['due_date'] = datetime.strptime(task['due_date'], '%Y-%m-%d').date() # Restore due_date field
-                if 'priority' in task and task['priority'] == "Infinity":
-                    task['priority'] = float('inf') # Restore priority field
-            if todo_list_name not in self.todo_lists:
-                self.todo_lists[todo_list_name] = {}
-            else:
-                self.todo_lists[todo_list_name].clear()
-            for task in tasks:
-                self.add_item_to_todo_list(todo_list_name, task['name'], priority=task['priority'], due_date=task['due_date'])
+                item_name = task.get('item')
+                priority = task.get('priority')
+                due_date = task.get('due_date')  # This should be a string in the format 'YYYY-MM-DD'
+                if priority == "Infinity":
+                    priority = float('inf')
+                elif not isinstance(priority, (int, float)):
+                    raise ValueError(f"Invalid priority for {item_name} in {todo_list_name}.")
+                # Add the task to the todo list
+                self.add_item_to_todo_list(todo_list_name, item_name, priority=priority, due_date=due_date)
