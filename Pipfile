@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 pytest = "*"
+tabulate = "*"
+flake8 = "*"
 
 [dev-packages]
 pytest = "*"
