@@ -12,28 +12,34 @@ class CustomEncoder(json.JSONEncoder):
             return "Infinity"
         return json.JSONEncoder.default(self, obj)
 
+# Main todo list class
 class TodoListManager:  
+    
     # Constructor, optional filename parameter with default value 'todolist.json'
     def __init__(self, filename='todolist.json'):
         self.todo_lists = {}
         self.filename = filename
         if os.path.exists(self.filename): 
             self.load_from_file()
-        atexit.register(self.save_to_file)  # Automatically call the save_to_file method before exiting
+        atexit.register(self.save_to_file)  # Automatically save the created lists to the file named filename
 
+    # Create a new todo list
     def create_todo_list(self, name):
         if name in self.todo_lists:
             raise ValueError(f"TodoList named {name} already exists.")
         self.todo_lists[name] = []
 
+    # Delete a certain todo list
     def delete_todo_list(self, name):
         if name not in self.todo_lists:
             raise ValueError(f"No TodoList named {name} found.")
         del self.todo_lists[name]
 
+    # Show all todo lists
     def show_all_todo_list(self):
         return self.todo_lists
 
+    # Change todo list name
     def change_todo_list_name(self, old_name, new_name):
         if old_name not in self.todo_lists:
             raise ValueError(f"No TodoList named {old_name} found.")
@@ -54,16 +60,17 @@ class TodoListManager:
         else:
             item_data['due_date'] = None
         self.todo_lists[name].append(item_data)
+        # Sort the list after insertion
+        self.todo_lists[name].sort(
+            key=lambda x: (x['priority'], x['due_date'] if x['due_date'] is not None else datetime.max.date())
+        )
 
-    # Sort the list first, then show it
+    # Return list in a user-friendly format
     def show_all_items_in_todo_list(self, name):
         if name not in self.todo_lists:
             raise ValueError(f"No TodoList named {name} found.")
         formatted_items = []
-        for item_data in sorted(
-                self.todo_lists[name],
-                key=lambda x: (x['priority'], x['due_date'] if x['due_date'] is not None else datetime.max.date()) # priority > due_date, and we give date a default max value to represent no due date (very low priority)
-            ):
+        for item_data in self.todo_lists[name]:
             item_string = f"Item: {item_data['item']}"
             if item_data['priority'] == float('inf'):
                 item_string += ", Priority: No priority specified" # format the returned list to be more user-friendly
@@ -76,6 +83,7 @@ class TodoListManager:
             formatted_items.append(item_string)
         return formatted_items
 
+    # Remove an item from the specified todo list
     def remove_item_from_todo_list(self, name, index):
         if name not in self.todo_lists:
             raise ValueError(f"No TodoList named {name} found.")
@@ -83,6 +91,10 @@ class TodoListManager:
             del self.todo_lists[name][index]
         except IndexError:
             raise IndexError(f"No item at index {index} in TodoList {name}.")
+        # Sort the list after deletion
+        self.todo_lists[name].sort(
+            key=lambda x: (x['priority'], x['due_date'] if x['due_date'] is not None else datetime.max.date())
+        )
     
     # Save to json file using the custom encoder
     def save_to_file(self):
