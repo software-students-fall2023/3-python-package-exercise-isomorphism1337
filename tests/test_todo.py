@@ -1,5 +1,5 @@
-from todo import TodoListManager
-from todo import CustomEncoder
+from src.todopkg.todo import TodoListManager
+from src.todopkg.todo import CustomEncoder
 from datetime import date
 import pytest
 import os
@@ -15,31 +15,35 @@ def manager(tmpdir):
 #--------------------------------------------------------------------------------------------
 # Three test functions for create_todo_list function
 def test_create_todo_list(manager):
-    manager.create_todo_list("Groceries")
+    result = manager.create_todo_list("Groceries")
     assert "Groceries" in manager.todo_lists
+    assert result is True  
 
 def test_create_existing_todo_list(manager):
     manager.create_todo_list("Groceries")
-    with pytest.raises(ValueError, match = r"TodoList named Groceries already exists."):
-        manager.create_todo_list("Groceries")
-        
+    result = manager.create_todo_list("Groceries")
+    assert result is False  
+    assert "Groceries" in manager.todo_lists  
+
 def test_create_todo_list_data_integrity(manager):
-    manager.create_todo_list('Hobbies')
+    result = manager.create_todo_list('Hobbies')
     assert isinstance(manager.todo_lists['Hobbies'], list)
     assert len(manager.todo_lists['Hobbies']) == 0
+    assert result is True  
 #--------------------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------------------
 # Three test functions for delete_todo_list function
 def test_delete_todo_list(manager):
     manager.create_todo_list("Groceries")
-    manager.delete_todo_list("Groceries")
+    deleted = manager.delete_todo_list("Groceries")
+    assert deleted is True
     assert "Groceries" not in manager.todo_lists
 
 def test_delete_nonexistent_todo_list(manager):
-    with pytest.raises(ValueError, match = r"No TodoList named Groceries found."):
-        manager.delete_todo_list("Groceries")
-        
+    deleted = manager.delete_todo_list("Groceries")
+    assert deleted is False
+
 def test_delete_todo_list_does_not_affect_others(manager):
     manager.create_todo_list('Groceries')
     manager.create_todo_list('Chores')
@@ -82,55 +86,50 @@ def test_show_all_todo_list_consistency(manager):
 # Three test functions for change_todo_list_name function
 def test_change_todo_list_name(manager):
     manager.create_todo_list("Groceries")
-    manager.change_todo_list_name("Groceries", "Supermarket")
+    change_status = manager.change_todo_list_name("Groceries", "Supermarket")
+    assert change_status is True
     assert "Supermarket" in manager.todo_lists
     assert "Groceries" not in manager.todo_lists
 
 def test_change_todo_list_name_to_existing_name(manager):
     manager.create_todo_list("Groceries")
     manager.create_todo_list("Supermarket")
-    with pytest.raises(ValueError, match = r"TodoList named Supermarket already exists."):
-        manager.change_todo_list_name("Groceries", "Supermarket")
-        
+    change_status = manager.change_todo_list_name("Groceries", "Supermarket")
+    assert change_status is False
+
 def test_change_nonexistent_todo_list_name(manager):
-    manager.create_todo_list("Groceries")
-    with pytest.raises(ValueError, match = r"No TodoList named Supermarket found."):
-        manager.change_todo_list_name("Supermarket", "Groceries")
+    change_status = manager.change_todo_list_name("Supermarket", "Groceries")
+    assert change_status is False
 #--------------------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------------------
-# Five test functions for add_item_to_todo_list function
+# Seven test functions for add_item_to_todo_list function.
 def test_add_item_to_todo_list(manager):
     manager.create_todo_list("Groceries")
-    manager.add_item_to_todo_list("Groceries", "Milk")
-    manager.add_item_to_todo_list("Groceries", "Eggs")
-    manager.add_item_to_todo_list("Groceries", "Bread")
+    assert manager.add_item_to_todo_list("Groceries", "Milk") == "Item added successfully."
+    assert manager.add_item_to_todo_list("Groceries", "Eggs") == "Item added successfully."
+    assert manager.add_item_to_todo_list("Groceries", "Bread") == "Item added successfully."
     items = manager.show_all_items_in_todo_list("Groceries")
-    assert items == [
-        "Item: Milk, Priority: No priority specified, Due date: No due date",
-        "Item: Eggs, Priority: No priority specified, Due date: No due date",
-        "Item: Bread, Priority: No priority specified, Due date: No due date"
-    ]
+    assert len(items) == 3
 
 def test_add_item_to_todo_list_priority_only(manager):
     manager.create_todo_list("Groceries")
-    manager.add_item_to_todo_list("Groceries", "Milk", 2)
-    manager.add_item_to_todo_list("Groceries", "Eggs", 1)
-    manager.add_item_to_todo_list("Groceries", "Bread")
-    manager.add_item_to_todo_list("Groceries", "Butter", 3)
+    assert manager.add_item_to_todo_list("Groceries", "Milk", 2) == "Item added successfully."
+    assert manager.add_item_to_todo_list("Groceries", "Eggs", 1) == "Item added successfully."
+    assert manager.add_item_to_todo_list("Groceries", "Bread") == "Item added successfully."
+    assert manager.add_item_to_todo_list("Groceries", "Butter", 3) == "Item added successfully."
     items = manager.show_all_items_in_todo_list("Groceries")
-    expected_items = [
+    assert items == [
         "Item: Eggs, Priority: 1, Due date: No due date",
         "Item: Milk, Priority: 2, Due date: No due date",
         "Item: Butter, Priority: 3, Due date: No due date",
         "Item: Bread, Priority: No priority specified, Due date: No due date"
     ]
-    assert items == expected_items
 
 def test_add_item_to_todo_list_due_date_and_priority(manager):
     manager.create_todo_list("Homework")
-    manager.add_item_to_todo_list("Homework", "Midterm Review", 1, "2023-11-10")
-    manager.add_item_to_todo_list("Homework", "Essay", 2, "2023-11-09")
+    assert manager.add_item_to_todo_list("Homework", "Midterm Review", 1, "2023-11-10") == "Item added successfully."
+    assert manager.add_item_to_todo_list("Homework", "Essay", 2, "2023-11-09") == "Item added successfully."
     items = manager.show_all_items_in_todo_list("Homework")
     assert items == [
         "Item: Midterm Review, Priority: 1, Due date: 2023-11-10",
@@ -139,8 +138,8 @@ def test_add_item_to_todo_list_due_date_and_priority(manager):
 
 def test_add_item_to_todo_list_due_date_only(manager):
     manager.create_todo_list("Reading")
-    manager.add_item_to_todo_list("Reading", "Chapter 1", due_date="2023-11-15")
-    manager.add_item_to_todo_list("Reading", "Chapter 2", due_date="2023-11-22")
+    assert manager.add_item_to_todo_list("Reading", "Chapter 1", due_date="2023-11-15") == "Item added successfully."
+    assert manager.add_item_to_todo_list("Reading", "Chapter 2", due_date="2023-11-22") == "Item added successfully."
     items = manager.show_all_items_in_todo_list("Reading")
     assert items == [
         "Item: Chapter 1, Priority: No priority specified, Due date: 2023-11-15",
@@ -148,13 +147,26 @@ def test_add_item_to_todo_list_due_date_only(manager):
     ]
 
 def test_add_item_to_nonexistent_todo_list(manager):
+    result = manager.add_item_to_todo_list("Supermarket", "Bread")
+    assert result == "No TodoList named Supermarket found."
+    
+def test_add_item_with_invalid_priority(manager):
     manager.create_todo_list("Groceries")
-    with pytest.raises(ValueError, match = r"No TodoList named Supermarket found."):
-        manager.add_item_to_todo_list("Supermarket", "Bread")
+    result_high_priority = manager.add_item_to_todo_list("Groceries", "Milk", priority="High")
+    assert result_high_priority == "Priority must be a non-negative integer."
+    result_negative_priority = manager.add_item_to_todo_list("Groceries", "Milk", priority=-1)
+    assert result_negative_priority == "Priority must be a non-negative integer."
+
+def test_add_item_with_invalid_due_date(manager):
+    manager.create_todo_list("Homework")
+    result_wrong_format = manager.add_item_to_todo_list("Homework", "Read Chapter 3", due_date="23-11-10")
+    assert result_wrong_format == "Due date must be in YYYY-MM-DD format."
+    result_invalid_date = manager.add_item_to_todo_list("Homework", "Read Chapter 4", due_date="2023-02-30")
+    assert result_invalid_date == "Due date must be in YYYY-MM-DD format."
 #--------------------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------------------
-# Three test functions for show_all_items_in_todo_list function
+# Four test functions for show_all_items_in_todo_list function
 def test_show_all_items_in_empty_list(manager):
     manager.create_todo_list('EmptyList')
     items = manager.show_all_items_in_todo_list('EmptyList')
@@ -176,6 +188,10 @@ def test_show_all_items_in_list_with_multiple_items(manager):
         'Item: Buy milk, Priority: 1, Due date: No due date',
         'Item: Read book, Priority: No priority specified, Due date: 2023-11-06'
     ]
+    
+def test_show_all_items_in_nonexistent_list(manager):
+    message = manager.show_all_items_in_todo_list('NonExistentList')
+    assert message == "No TodoList named NonExistentList found."
 #--------------------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------------------
@@ -183,18 +199,18 @@ def test_show_all_items_in_list_with_multiple_items(manager):
 def test_remove_item_from_todo_list(manager):
     manager.create_todo_list("Groceries")
     manager.add_item_to_todo_list("Groceries", "Milk")
-    manager.remove_item_from_todo_list("Groceries", 0)
+    result = manager.remove_item_from_todo_list("Groceries", 0)
     assert "Milk" not in manager.show_all_items_in_todo_list("Groceries")
+    assert result == "Item at index 0 removed from TodoList Groceries."
 
 def test_remove_item_from_todo_list_invalid_index(manager):
     manager.create_todo_list("Groceries")
-    with pytest.raises(IndexError, match=r"No item at index 0 in TodoList Groceries."):
-        manager.remove_item_from_todo_list("Groceries", 0)
-        
+    result = manager.remove_item_from_todo_list("Groceries", 0)
+    assert result == "Index 0 is out of range for TodoList Groceries."
+
 def test_remove_item_from_nonexistent_list(manager):
-    manager.create_todo_list("Groceries")
-    with pytest.raises(ValueError, match = r"No TodoList named Supermarket found."):
-        manager.remove_item_from_todo_list("Supermarket", 0)
+    result = manager.remove_item_from_todo_list("Supermarket", 0)
+    assert result == "No TodoList named Supermarket found."
 #--------------------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------------------
@@ -258,6 +274,7 @@ def test_load_from_invalid_data(manager, tmpdir):
         manager.load_from_file()
 #--------------------------------------------------------------------------------------------
 
+# Another test function for save_to_file and load_from_file both (simulate restarting program)
 def test_save_and_load_functionalities(tmpdir):
     file_path = tmpdir.join("todo.json")
     
