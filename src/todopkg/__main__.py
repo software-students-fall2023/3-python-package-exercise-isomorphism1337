@@ -7,13 +7,14 @@ def main():
     # Demonstrate creating a new todo list
     print("Creating a new todo list named 'Groceries'...")
     manager.create_todo_list('Groceries')
-    manager.create_todo_list('Groceries')
+    manager.create_todo_list('Supermarket')
 
     # Demonstrate adding items to the todo list
     print("Adding items to 'Groceries' list...")
     manager.add_item_to_todo_list('Groceries', 'Apple', priority=1, due_date="2023-11-10")
     manager.add_item_to_todo_list('Groceries', 'Banana', priority=2)
     manager.add_item_to_todo_list('Groceries', 'Carrot', due_date="2023-12-01")
+    manager.add_item_to_todo_list('Supermarket', 'Test', due_date="2023-11-03")
 
     # Demonstrate showing all todo lists
     print("\nAll Todo Lists:")
