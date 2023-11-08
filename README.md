@@ -18,7 +18,7 @@
 ## PyPI
 Click [Here](https://pypi.org/project/todopkg/) to view `todopkg` on PyPI.
 
-## How to Use `todopkg`
+# How to Use `todopkg`
 
 ### Installing Python
 
@@ -40,7 +40,7 @@ After installing `todopkg`, you can import `todopkg` to your program using:
   from todopkg import TodoListManager
   ```
 
-### Documentation and Instruction
+## Documentation and Instruction
 
 - **Create a to-do list instance:**
 
@@ -174,15 +174,18 @@ After installing `todopkg`, you can import `todopkg` to your program using:
   todo_manager.load_from_file()
   ```
 
-### Example Program
+## Example Program
 
 For a full example program that utilizes all functionalities, kindly refer to [Example TodoList Usage](./src/todopkg/__main__.py). 
 
 You can also run this file following this procedure:
-1. Clone the repository:
+1. Clone the repository and cd to the project root directory:
 
    ```bash
    git clone https://github.com/software-students-fall2023/3-python-package-exercise-isomorphism1337.git
+   ```
+
+   ```bash
    cd 3-python-package-exercise-isomorphism1337
    ```
 
@@ -205,13 +208,13 @@ You can also run this file following this procedure:
 
 ---
 
-## How to contribute to `todopkg`
+# How to contribute to `todopkg`
 
-### Prerequisites
+## Prerequisites
 
 - Python 3.9+
 
-### Initial Setup
+## Initial Setup
 
 1. Clone the repository and cd to the project root directory:
 
@@ -236,7 +239,7 @@ You can also run this file following this procedure:
     pipenv shell
     ```
 
-### Making Changes
+## Making Changes
 1. Create a new branch for your feature or fix:
     ```bash
     git checkout -b your-branch-name
@@ -244,7 +247,7 @@ You can also run this file following this procedure:
 2. Make your changes to the codebase. Remember to adhere to the       project's coding standards and guidelines.
 3. If you've added new code, consider writing tests that cover your changes in the [tests](./tests/) folder. This is important to ensure that your code works as expected and future changes don't break your implementation.
 
-### Running Tests
+## Running Tests
 
 After making changes, run all tests to ensure that your changes don't break any existing functionality:
 
@@ -252,7 +255,7 @@ After making changes, run all tests to ensure that your changes don't break any 
   pipenv run pytest
   ```
 
-### Commiting Your Changes
+## Commiting Your Changes
 
 Add your changes to staging, then commit your changes with a descriptive message:
 
@@ -263,17 +266,17 @@ Add your changes to staging, then commit your changes with a descriptive message
   git commit -m "Your detailed description of the changes"
   ```
 
-### Pushing Changes
+## Pushing Changes
 
 Push your changes to your branch:
   ```bash
   git push origin your-branch-name
   ```
 
-### Submitting a Pull Request
+## Submitting a Pull Request
 Create a new pull request for your branch, and we will review your code later.
 
-### After Your Pull Request is Merged
+## After Your Pull Request is Merged
 
 1. Pull the changes from the original repository:
     ```bash
@@ -285,6 +288,8 @@ Create a new pull request for your branch, and we will review your code later.
     git branch -d your-branch-name
     git push origin --delete your-branch-name
     ```
+
+---
 
 # Contributors
 
