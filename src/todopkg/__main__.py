@@ -1,4 +1,4 @@
-from .todo import TodoListManager
+from .todopkg import TodoListManager
 
 # Simple example function to demonstrate how to use todopkg package
 def main():
