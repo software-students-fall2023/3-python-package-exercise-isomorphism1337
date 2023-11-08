@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="todopkg",
-    version="0.2.1",
+    version="0.2.2",
     packages=find_packages(),
     install_requires = [
         'build==1.0.3; python_version >= "3.7"',

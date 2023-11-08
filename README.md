@@ -1,6 +1,8 @@
 # Python Package Exercise
 # todopkg
-[![Build Status](https://github.com/software-students-fall2023/3-python-package-exercise-isomorphism1337/actions/workflows/main.yml/badge.svg)](https://github.com/software-students-fall2023/3-python-package-exercise-isomorphism1337/actions/workflows/main.yml)
+[![CI / CD](https://github.com/software-students-fall2023/3-python-package-exercise-isomorphism1337/actions/workflows/main.yml/badge.svg)](https://github.com/software-students-fall2023/3-python-package-exercise-isomorphism1337/actions/workflows/main.yml)
+![PyPI](https://img.shields.io/pypi/v/todopkg.svg)
+![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
 
 `todopkg` is a Python package for managing and organizing to-do lists with prioritization and due dates. This package allows for easy creation, modification, and deletion of to-do lists and tasks.
 
@@ -18,13 +20,25 @@ Click [Here](https://pypi.org/project/todopkg/) to view `todopkg` on PyPI.
 
 ## How to Use `todopkg`
 
+### Installing Python
+
+Please make sure you have Python 3.9 or above on your local machine, you can get the latest Python from its [official website](https://www.python.org/).
+
 ### Installing `todopkg`
 
-To install `todopkg`, run:
+To install `todopkg` via pip, run:
 
 ```bash
 pip install todopkg
 ```
+
+### Import `todopkg`
+
+After installing `todopkg`, you can import `todopkg` to your program using:
+
+  ```python
+  from todopkg import TodoListManager
+  ```
 
 ### Documentation and Instruction
 
@@ -39,26 +53,22 @@ pip install todopkg
   - **Default:**
 
     ```python
-    from todo import TodoListManager
     todo_manager = TodoListManager()
     ```
 
   - **Use custom storage file:**
 
     ```python
-    from todo import TodoListManager
     todo_manager = TodoListManager(filename = my_file.json)
     ```
   - **Disable auto restore:**
 
     ```python
-    from todo import TodoListManager
     todo_manager = TodoListManager(enable_auto_restore = False)
     ```
   - **Use custom storage file and Disable auto restore:**
 
     ```python
-    from todo import TodoListManager
     todo_manager = TodoListManager(filename = my_file.json, enable_auto_restore = False)
     ```
 
@@ -176,14 +186,18 @@ You can also run this file following this procedure:
    cd 3-python-package-exercise-isomorphism1337
    ```
 
-2. Install the dependencies:
-
+2. Install `pipenv` if you don't have one on your machine:
     ```bash
     pip install pipenv
+    ```
+
+3. Install the dependencies:
+
+    ```bash
     pipenv install --dev
     pipenv shell
     ```
-3. Run the example file:
+4. Run the example file:
 
     ```bash
     python -m src.todopkg
@@ -196,55 +210,81 @@ You can also run this file following this procedure:
 ### Prerequisites
 
 - Python 3.9+
-- pipenv
-- pytest
-- build
-- twine
 
 ### Initial Setup
 
-1. Clone the repository:
+1. Clone the repository and cd to the project root directory:
 
    ```bash
    git clone https://github.com/software-students-fall2023/3-python-package-exercise-isomorphism1337.git
-   cd 3-python-package-exercise-isomorphism1337
    ```
 
-2. Install the dependencies:
-
    ```bash
+   cd You_Own_Directory/3-python-package-exercise-isomorphism1337
+   ```
+
+2. Install `pipenv` if you don't have one on your machine:
+
+    ```bash
     pip install pipenv
+    ```
+
+3. Install the dependencies:
+
+    ```bash
     pipenv install --dev
     pipenv shell
     ```
 
+### Making Changes
+1. Create a new branch for your feature or fix:
+    ```bash
+    git checkout -b your-branch-name
+    ```
+2. Make your changes to the codebase. Remember to adhere to the       project's coding standards and guidelines.
+3. If you've added new code, consider writing tests that cover your changes in the [tests](./tests/) folder. This is important to ensure that your code works as expected and future changes don't break your implementation.
+
 ### Running Tests
 
-To run tests and verify everything is working as expected:
+After making changes, run all tests to ensure that your changes don't break any existing functionality:
 
-```bash
-pipenv run pytest
-```
+  ```bash
+  pipenv run pytest
+  ```
 
-### Building the Package
+### Commiting Your Changes
 
-After making changes, you can build the package locally to test:
+Add your changes to staging, then commit your changes with a descriptive message:
 
-```bash
-pipenv run python -m build
-```
+  ```bash
+  git add .
+  ```
+  ```bash
+  git commit -m "Your detailed description of the changes"
+  ```
 
-This will create distribution files in the `dist` directory.
+### Pushing Changes
 
-### Uploading to PyPI
+Push your changes to your branch:
+  ```bash
+  git push origin your-branch-name
+  ```
 
-To upload the package to PyPI (after setting up your credentials):
+### Submitting a Pull Request
+Create a new pull request for your branch, and we will review your code later.
 
-```bash
-pipenv run twine upload dist/*
-```
+### After Your Pull Request is Merged
 
-**Note:** Use TestPyPI to test your package deployment before uploading to the main PyPI repository.
+1. Pull the changes from the original repository:
+    ```bash
+    git checkout main
+    git pull origin main
+    ```
+2. Delete your old branch:
+    ```bash
+    git branch -d your-branch-name
+    git push origin --delete your-branch-name
+    ```
 
 # Contributors
 
