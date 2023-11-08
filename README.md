@@ -13,6 +13,9 @@
 - Save and load lists from a file
 - Command-line friendly display with table formatting
 
+## PyPI
+Click [Here](https://pypi.org/project/todopkg/) to view `todopkg` on PyPI.
+
 ## How to Use `todopkg`
 
 ### Installing `todopkg`
