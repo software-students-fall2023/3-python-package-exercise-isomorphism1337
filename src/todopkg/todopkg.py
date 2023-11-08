@@ -47,6 +47,7 @@ class TodoListManager:
             print(f"No TodoList named '{name}' found.")
             return False
         del self.todo_lists[name]
+        print(f"TodoList named '{name}' deleted")
         self.save_to_file()
         return True
 
@@ -72,6 +73,10 @@ class TodoListManager:
         if name not in self.todo_lists:
             print(f"No TodoList named {name} found.")
             return f"No TodoList named {name} found."
+        for existing_item in self.todo_lists[name]:
+            if existing_item['item'] == item:
+                print(f"Item {item} already exists in the TodoList {name}.")
+                return "Item already exists in the TodoList."
         if priority is not None and priority != float('inf'):
             if not isinstance(priority, int) or priority < 0:
                 print("Priority must be a non-negative integer.")

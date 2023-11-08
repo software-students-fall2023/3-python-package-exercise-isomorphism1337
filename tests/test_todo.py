@@ -103,7 +103,7 @@ def test_change_nonexistent_todo_list_name(manager):
 #--------------------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------------------
-# Seven test functions for add_item_to_todo_list function.
+# Eight test functions for add_item_to_todo_list function.
 def test_add_item_to_todo_list(manager):
     manager.create_todo_list("Groceries")
     assert manager.add_item_to_todo_list("Groceries", "Milk") == "Item added successfully."
@@ -163,6 +163,13 @@ def test_add_item_with_invalid_due_date(manager):
     assert result_wrong_format == "Due date must be in YYYY-MM-DD format."
     result_invalid_date = manager.add_item_to_todo_list("Homework", "Read Chapter 4", due_date="2024-02-30")
     assert result_invalid_date == "Due date must be in YYYY-MM-DD format."
+    
+def test_add_existing_item_to_todo_list(manager):
+    manager.create_todo_list("Groceries")
+    result_first_add = manager.add_item_to_todo_list("Groceries", "Milk")
+    assert result_first_add == "Item added successfully."
+    result_second_add = manager.add_item_to_todo_list("Groceries", "Milk")
+    assert result_second_add == "Item already exists in the TodoList."
 #--------------------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------------------
