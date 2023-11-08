@@ -8,6 +8,8 @@ pytest = "*"
 tabulate = "*"
 flake8 = "*"
 exceptiongroup = "*"
+build = "*"
+twine = "*"
 
 [dev-packages]
 pytest = "*"

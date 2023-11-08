@@ -95,11 +95,11 @@ def test_change_todo_list_name_to_existing_name(manager):
     manager.create_todo_list("Groceries")
     manager.create_todo_list("Supermarket")
     change_status = manager.change_todo_list_name("Groceries", "Supermarket")
-    assert change_status is False
+    assert change_status == "TodoList named 'Supermarket' already exists."
 
 def test_change_nonexistent_todo_list_name(manager):
     change_status = manager.change_todo_list_name("Supermarket", "Groceries")
-    assert change_status is False
+    assert change_status == "No TodoList named 'Supermarket' found."
 #--------------------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------------------
@@ -161,7 +161,7 @@ def test_add_item_with_invalid_due_date(manager):
     manager.create_todo_list("Homework")
     result_wrong_format = manager.add_item_to_todo_list("Homework", "Read Chapter 3", due_date="23-11-10")
     assert result_wrong_format == "Due date must be in YYYY-MM-DD format."
-    result_invalid_date = manager.add_item_to_todo_list("Homework", "Read Chapter 4", due_date="2023-02-30")
+    result_invalid_date = manager.add_item_to_todo_list("Homework", "Read Chapter 4", due_date="2024-02-30")
     assert result_invalid_date == "Due date must be in YYYY-MM-DD format."
 #--------------------------------------------------------------------------------------------
 
@@ -195,13 +195,78 @@ def test_show_all_items_in_nonexistent_list(manager):
 #--------------------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------------------
-# Three test functions for remove_item_from_todo_list function
+# Five test functions for print_all_todo_lists function    
+def test_print_specific_todo_list(capsys, manager):
+    manager.create_todo_list('Work')
+    manager.add_item_to_todo_list('Work', 'Task 1', 1, '2023-11-20')
+    manager.print_all_todo_lists('Work')
+    captured = capsys.readouterr()
+    assert 'Todo List: Work' in captured.out
+    assert 'Task 1' in captured.out
+    assert '1' in captured.out
+    assert '2023-11-20' in captured.out
+
+def test_print_all_todo_lists(capsys, manager):
+    manager.create_todo_list('Work')
+    manager.create_todo_list('Home')
+    manager.add_item_to_todo_list('Work', 'Task 1', 1)
+    manager.add_item_to_todo_list('Home', 'Task 2', 2, '2023-11-18')
+    manager.print_all_todo_lists()
+    captured = capsys.readouterr()
+    print(captured.out)  
+    assert 'Todo List: Work' in captured.out
+    assert 'Todo List: Home' in captured.out  
+
+def test_print_nonexistent_todo_list(capsys, manager):
+     manager.create_todo_list('Work')
+     manager.print_all_todo_lists('Nonexistent')
+     captured = capsys.readouterr()
+     assert "No TodoList named 'Nonexistent' found." in captured.out
+     
+def test_print_empty_todo_list(capsys, manager):
+    list_name = 'EmptyList'
+    manager.create_todo_list(list_name)
+    manager.print_all_todo_lists(list_name)
+    captured = capsys.readouterr()
+    assert "Todo List: EmptyList" in captured.out
+    assert "This TodoList is empty." in captured.out
+    
+def test_print_todo_list_with_multiple_items(capsys, manager):
+    manager.create_todo_list('Work')
+    manager.add_item_to_todo_list('Work', 'Task 1', due_date = '2023-11-30')
+    manager.add_item_to_todo_list('Work', 'Task 2', due_date = '2023-12-25')
+    manager.print_all_todo_lists('Work')
+    captured = capsys.readouterr()
+    assert 'Task 1' in captured.out
+    assert 'Task 2' in captured.out
+    assert '2023-11-30' in captured.out
+    assert '2023-12-25' in captured.out
+#--------------------------------------------------------------------------------------------
+
+#--------------------------------------------------------------------------------------------
+# Five test functions for remove_item_from_todo_list function
 def test_remove_item_from_todo_list(manager):
     manager.create_todo_list("Groceries")
     manager.add_item_to_todo_list("Groceries", "Milk")
     result = manager.remove_item_from_todo_list("Groceries", 0)
     assert "Milk" not in manager.show_all_items_in_todo_list("Groceries")
     assert result == "Item at index 0 removed from TodoList Groceries."
+
+def test_order_preserved_after_removal(manager):
+    manager.create_todo_list("Chores")
+    manager.add_item_to_todo_list("Chores", "Wash dishes", priority=2, due_date='2023-12-01')
+    manager.add_item_to_todo_list("Chores", "Laundry", priority=1, due_date='2023-11-30')
+    manager.add_item_to_todo_list("Chores", "Vacuum", priority=2, due_date='2023-11-29')
+    manager.remove_item_from_todo_list("Chores", 0)
+    chores = manager.show_all_items_in_todo_list("Chores")
+    assert chores[0] == "Item: Vacuum, Priority: 2, Due date: 2023-11-29"
+    assert chores[1] == "Item: Wash dishes, Priority: 2, Due date: 2023-12-01"
+    
+def test_remove_item_with_non_integer_index(manager):
+    manager.create_todo_list("Groceries")
+    manager.add_item_to_todo_list("Groceries", "Eggs")
+    result = manager.remove_item_from_todo_list("Groceries", "one")  
+    assert result == "Invalid index: one. Index must be an integer."
 
 def test_remove_item_from_todo_list_invalid_index(manager):
     manager.create_todo_list("Groceries")
@@ -274,17 +339,16 @@ def test_load_from_invalid_data(manager, tmpdir):
         manager.load_from_file()
 #--------------------------------------------------------------------------------------------
 
+#--------------------------------------------------------------------------------------------
 # Another test function for save_to_file and load_from_file both (simulate restarting program)
 def test_save_and_load_functionalities(tmpdir):
     file_path = tmpdir.join("todo.json")
-    
     manager = TodoListManager(str(file_path))
     manager.create_todo_list('Groceries')
     manager.add_item_to_todo_list('Groceries', 'Apple', due_date="2023-11-10")
-
     del manager  # Ensure manager is not in scope anymore
-
     new_manager = TodoListManager(str(file_path))
     assert 'Groceries' in new_manager.show_all_todo_list()
     assert 'Apple' in [item['item'] for item in new_manager.todo_lists['Groceries']]
     assert new_manager.show_all_todo_list()['Groceries'][0]['priority'] == float('inf')
+#--------------------------------------------------------------------------------------------

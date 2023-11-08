@@ -50,7 +50,6 @@ class TodoListManager:
         self.save_to_file()
         return True
 
-
     # Show all todo lists
     def show_all_todo_list(self):
         return self.todo_lists
@@ -59,26 +58,30 @@ class TodoListManager:
     def change_todo_list_name(self, old_name, new_name):
         if old_name not in self.todo_lists:
             print(f"No TodoList named '{old_name}' found.")
-            return False
+            return f"No TodoList named '{old_name}' found."
         if new_name in self.todo_lists:
             print(f"TodoList named '{new_name}' already exists.")
-            return False
+            return f"TodoList named '{new_name}' already exists."
         self.todo_lists[new_name] = self.todo_lists.pop(old_name)
+        print(f"Successfully changed TodoList '{old_name}' to '{new_name}'")
         self.save_to_file()
         return True
 
     # Maintain two optional fields used for sorting, priority field has higher priority than due_date field
     def add_item_to_todo_list(self, name, item, priority=None, due_date=None):
         if name not in self.todo_lists:
+            print(f"No TodoList named {name} found.")
             return f"No TodoList named {name} found."
         if priority is not None and priority != float('inf'):
             if not isinstance(priority, int) or priority < 0:
+                print("Priority must be a non-negative integer.")
                 return "Priority must be a non-negative integer."
         item_data = {'item': item, 'priority': priority if priority is not None else float('inf')}
         if due_date:
             try:
                 item_data['due_date'] = datetime.strptime(due_date, "%Y-%m-%d").date()
             except ValueError:
+                print("Due date must be in YYYY-MM-DD format.")
                 return "Due date must be in YYYY-MM-DD format."
         else:
             item_data['due_date'] = None
@@ -93,6 +96,7 @@ class TodoListManager:
     # Return list in a user-friendly format
     def show_all_items_in_todo_list(self, name):
         if name not in self.todo_lists:
+            print(f"No TodoList named {name} found.")
             return f"No TodoList named {name} found."  # Returning a message instead of raising an error
         formatted_items = []
         for item_data in self.todo_lists[name]:
@@ -108,14 +112,24 @@ class TodoListManager:
             formatted_items.append(item_string)
         return formatted_items
     
-    # Print all todo lists in a table format
-    def print_all_todo_lists(self):
-        for list_name, items in self.show_all_todo_list().items():
-            title = f"Todo List: {list_name}"
+    # Print all todo lists (or a single todo list) in a table format
+    def print_all_todo_lists(self, list_name = None):
+        lists_to_print = self.show_all_todo_list().items()
+        if list_name:  # If a specific list name is provided
+            if list_name in self.todo_lists:
+                lists_to_print = [(list_name, self.todo_lists[list_name])]
+            else:
+                print(f"No TodoList named '{list_name}' found.")
+                return False
+        for name, items in lists_to_print:
+            title = f"Todo List: {name}"
             separator = "-" * (11 + len(title))
             print(separator)
             print(title)
             print(separator)
+            if not items:
+                print("This TodoList is empty.")
+                continue
             table = []
             headers = ["Item", "Priority", "Due Date"]
             for item in items:
@@ -124,12 +138,18 @@ class TodoListManager:
                 table.append([item['item'], priority, due_date])
             print(tabulate(table, headers, tablefmt="grid"))
             print()
-
+        return True
+            
     # Remove an item from the specified todo list
     def remove_item_from_todo_list(self, name, index):
         if name not in self.todo_lists:
+            print(f"No TodoList named {name} found.")
             return f"No TodoList named {name} found."
+        if not isinstance(index, int):
+            print(f"Invalid index: {index}. Index must be an integer.")
+            return f"Invalid index: {index}. Index must be an integer."
         if not isinstance(index, int) or index < 0 or index >= len(self.todo_lists[name]):
+            print(f"Index {index} is out of range for TodoList {name}.")
             return f"Index {index} is out of range for TodoList {name}."
         del self.todo_lists[name][index]
         # Sort the list after deletion
@@ -137,6 +157,7 @@ class TodoListManager:
             key=lambda x: (x['priority'], x['due_date'] if x['due_date'] is not None else datetime.max.date())
         )
         self.save_to_file()
+        print(f"Item at index {index} removed from TodoList {name}.")
         return f"Item at index {index} removed from TodoList {name}."
     
     # Save to json file using the custom encoder
