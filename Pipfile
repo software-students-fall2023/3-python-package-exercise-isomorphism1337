@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pytest = "*"
+tabulate = "*"
+flake8 = "*"
+exceptiongroup = "*"
+build = "*"
+twine = "*"
+tomli = "*"
+todopkg = {file = ".", editable = true}
+
+[dev-packages]
+pytest = "*"
+
+[requires]

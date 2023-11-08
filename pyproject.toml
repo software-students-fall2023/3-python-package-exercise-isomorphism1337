@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project]
+name = "todopkg"
+version = "1.0.7"
+description = "A To-Do List manager package for managing your tasks efficiently."
+authors = [
+    { name = "isomorphism1337 group", email="jw6699@nyu.edu" },
+]
+readme = "README.md"
+keywords = ["todo", "list", "project management"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "tabulate"
+]
+
+[project.urls]
+homepage = "https://github.com/software-students-fall2023/3-python-package-exercise-isomorphism1337.git"
