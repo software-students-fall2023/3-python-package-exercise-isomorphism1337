@@ -10,6 +10,8 @@ flake8 = "*"
 exceptiongroup = "*"
 build = "*"
 twine = "*"
+tomli = "*"
+todopkg = {file = ".", editable = true}
 
 [dev-packages]
 pytest = "*"

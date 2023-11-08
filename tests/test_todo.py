@@ -1,5 +1,5 @@
-from src.todopkg import TodoListManager
-from src.todopkg import CustomEncoder
+from todopkg import TodoListManager
+from todopkg import CustomEncoder
 from datetime import date
 import pytest
 import os
