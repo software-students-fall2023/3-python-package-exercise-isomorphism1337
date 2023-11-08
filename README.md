@@ -293,8 +293,8 @@ Create a new pull request for your branch, and we will review your code later.
 
 # Contributors
 
-- [Fuzhen Li](https://github.com/fzfzlfz)
 - [Jiasheng wang](https://github.com/isomorphismss)
+- [Fuzhen Li](https://github.com/fzfzlfz)
 - [Xuefeng Song](https://github.com/wowwowooo)
 - [Yuantian Tan](https://github.com/AsukaTan)
 
