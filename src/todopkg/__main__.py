@@ -1,48 +1,59 @@
 from .todo import TodoListManager
 
+# Simple example function to demonstrate how to use todopkg package
 def main():
-    # Instantiate the TodoListManager, we don't restore from the last call
-    manager = TodoListManager(enable_auto_restore = False)
+    # Initialize the TodoListManager
+    manager = TodoListManager(enable_auto_restore=False)  # Assuming you don't want to load from the Json file right now
 
-    # Demonstrate creating a new todo list
-    print("Creating a new todo list named 'Groceries'...")
-    manager.create_todo_list('Groceries')
-    manager.create_todo_list('Supermarket')
+    # Create a couple of todo lists
+    print("\nCreating two todo lists...\n")
+    manager.create_todo_list("Chores")
+    manager.create_todo_list("Work")
 
-    # Demonstrate adding items to the todo list
-    print("Adding items to 'Groceries' list...")
-    manager.add_item_to_todo_list('Groceries', 'Apple', priority=1, due_date="2023-11-10")
-    manager.add_item_to_todo_list('Groceries', 'Banana', priority=2)
-    manager.add_item_to_todo_list('Groceries', 'Carrot', due_date="2023-12-01")
-    manager.add_item_to_todo_list('Supermarket', 'Test', due_date="2023-11-03")
+    # Add items to the todo lists
+    print("Add items to the todo lists...\n")
+    manager.add_item_to_todo_list("Chores", "Wash dishes", priority=2, due_date='2023-12-01')
+    manager.add_item_to_todo_list("Chores", "Take out trash", priority=1, due_date='2023-11-25')
+    manager.add_item_to_todo_list("Work", "Finish report", priority=1, due_date='2023-11-30')
+    manager.add_item_to_todo_list("Work", "Email client", priority=2)
 
-    # Demonstrate showing all todo lists
-    print("\nAll Todo Lists:")
+    # Show all items in a specific todo list
+    print("Items in Chores list:")
+    print(manager.show_all_items_in_todo_list("Chores"))
+    print("\nItems in Work list:")
+    print(manager.show_all_items_in_todo_list("Work"))
+
+    # Show all todo list in raw format
+    print("\nShow all todo list in raw format:")
+    print(manager.show_all_todo_list())
+
+    # Change the name of a todo list
+    print("\nChange the name of todo list 'Chores' to 'Household Tasks...'")
+    manager.change_todo_list_name("Chores", "Household Tasks")
+
+    # Remove an item from a todo list
+    print("\nRemove todo 'Wash dishes' from 'Household Tasks' list")
+    manager.remove_item_from_todo_list("Household Tasks", 0)
+
+    # Print the lists in table format
+    print("\nAll lists after removal:")
     manager.print_all_todo_lists()
 
-    # Demonstrate showing items in a specific todo list
-    print("\nItems in 'Groceries' list:")
-    items = manager.show_all_items_in_todo_list('Groceries')
-    for item in items:
-        print(item)
+    # Attempt to delete a todo list
+    print("Delete todo list 'Work'")
+    manager.delete_todo_list("Work")
+    print("\nAll lists after deletion:")
+    manager.print_all_todo_lists()
 
-    # Demonstrate deleting an item from the todo list
-    print("\nRemoving 'Banana' from 'Groceries' list...")
-    manager.remove_item_from_todo_list('Groceries', 1)
-
-    # Show remaining items in the todo list
-    print("\nItems in 'Groceries' list after removal:")
-    items = manager.show_all_items_in_todo_list('Groceries')
-    for item in items:
-        print(item)
-
-    # Demonstrate changing the name of a todo list
-    print("\nChanging 'Groceries' list name to 'Supermarket'...")
-    manager.change_todo_list_name('Groceries', 'Supermarket')
-
-    # Demonstrate showing all todo lists after renaming
-    print("\nAll Todo Lists after renaming:")
-    print(manager.show_all_todo_list())
+    # Demonstrate save to file and load from file
+    print("\nSaving lists to file.\n")
+    manager.save_to_file()
+    print("Clearing all lists from manager.\n")
+    manager.todo_lists.clear()
+    print("Loading lists from file.")
+    manager.load_from_file()
+    print("\nAll lists after loading from file:")
+    manager.print_all_todo_lists()
 
 if __name__ == "__main__":
     main()
