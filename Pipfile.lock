@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3b069bf78d023e75b8143becd256d5a07c3ae90cc7ddfde1848fd75cc3fa3fed"
+            "sha256": "d2691d2723c5f9e3d1eb72c785ca186498cbc6ee0d76830c85d6450fe4717389"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -375,6 +375,19 @@
             "index": "pypi",
             "markers": "python_version >= '3.7'",
             "version": "==0.9.0"
+        },
+        "todopkg": {
+            "editable": true,
+            "file": "."
+        },
+        "tomli": {
+            "hashes": [
+                "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc",
+                "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.7'",
+            "version": "==2.0.1"
         },
         "twine": {
             "hashes": [
