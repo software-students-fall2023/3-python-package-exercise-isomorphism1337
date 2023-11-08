@@ -6,7 +6,7 @@ where = ["src"]
 
 [project]
 name = "todopkg"
-version = "1.0.1"
+version = "1.0.4"
 description = "A To-Do List manager package for managing your tasks efficiently."
 authors = [
     { name = "Jiasheng Wang", email="jw6699@nyu.edu" },
